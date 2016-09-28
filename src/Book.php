@@ -95,5 +95,31 @@
         {
             $GLOBALS['DB']->exec("DELETE FROM authors_books WHERE author_id = {$author_id} AND book_id = {$this->getId()};");
         }
+
+        static function searchBooks($search_input)
+        {
+            $allBooksArray = Book::getAll();
+            $searchResults = array();
+            foreach ($allBooksArray as $book)
+            {
+                if (stripos($book->getTitle(), $search_input) !== false) {
+                    $authors = $book->getAuthors();
+                    array_push($searchResults, [$book, $authors]);
+                }
+            }
+
+            $allAuthors = Author::getAll();
+            foreach ($allAuthors as $author)
+            {
+                if (stripos($author->getName(), $search_input) !== false) {
+                    $books = $author->getBooks();
+                    foreach ($books as $book) {
+                        $authors = $book->getAuthors();
+                        array_push($searchResults, [$book, $authors]);
+                    }
+                }
+            }
+            return $searchResults;
+        }
     }
 ?>
