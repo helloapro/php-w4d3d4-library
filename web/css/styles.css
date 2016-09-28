@@ -1,0 +1,12 @@
+.well {
+    overflow:hidden;
+}
+
+/*.editForm {
+    display: inline-block;
+    width: 75%;
+}*/
+
+.deleteButton {
+    margin-top: 10px;
+}

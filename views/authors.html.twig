@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div class='container'>
+            <h1>Authors GALORE!</h1>
+            <div class='row'>
+                <div class='col-sm-3'>
+                    <div class='well'>
+                        {% if authors is not empty %}
+                        <h3>All Authors</h3>
+                            <ul>
+                                {% for author in authors %}
+                                    <a href='/authors/{{ author.getId }}'><li>{{ author.getName }}</li></a>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                        {% endif %}
+                        <form action='/authors' method='post'>
+                            <h3>Add an Author</h3>
+                            <div class='form-group'>
+                                <label>Name:</label>
+                                <input type='text' name='name' class='form-control'>
+                            </div>
+                            <button type='submit' class='btn btn-info'>Add</button>
+                        </form>
+                    </div>
+                </div>
+                <div class='col-sm-9'>
+                    <div class='well'>
+                        {% if author is empty %}
+                            <h3 class='text-center'>Select an author from the list</h3>
+                        {% else %}
+                            <h2>{{ author.getName }}</h2>
+                            <hr>
+                            <h3>Edit Author</h3>
+                            <form class='editForm' action='/authors/{{ author.getId }}' method='post'>
+                                <input type='hidden' name='_method' value='patch'>
+                                <div class='form-group'>
+                                    <label>Name:</label>
+                                    <input type='text' name='name' class='form-control' value='{{ author.getName }}'>
+                                </div>
+                                <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-pencil'></span> Edit</button>
+                            </form>
+                            <form class='deleteButton' action='/authors/{{ author.getId }}' method='post'>
+                                <input type='hidden' name='_method' value='delete'>
+                                <button class='btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Author</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
