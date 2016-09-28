@@ -59,6 +59,12 @@
         return $app['twig']->render('authors.html.twig', array('authors' => Author::getAll(), 'author' => $found_author, 'authorBooks' => $found_author->getBooks(), 'allBooks' => Book::getAll()));
     });
 
+    $app->delete("/authors/delete/{id}", function($id) use ($app) {
+        $found_author = Author::find($id);
+        $found_author->removeBook($_POST['book_id']);
+        return $app['twig']->render('authors.html.twig', array('authors' => Author::getAll(), 'author' => $found_author, 'authorBooks' => $found_author->getBooks(), 'allBooks' => Book::getAll()));
+    });
+
     $app->get("/books", function() use ($app) {
         return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => null));
     });
@@ -80,7 +86,11 @@
         return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book));
     });
 
-    $app->
+    $app->delete("/books/{id}", function($id) use ($app) {
+        $found_book = Book::find($id);
+        $found_book->delete();
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => null));
+    });
 
     return $app;
 ?>

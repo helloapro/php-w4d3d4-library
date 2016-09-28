@@ -1,12 +1,16 @@
+button.trash {
+    border: none;
+    background: transparent;
+}
+
 .well {
     overflow:hidden;
 }
 
-/*.editForm {
-    display: inline-block;
-    width: 75%;
-}*/
-
 .deleteButton {
     margin-top: 10px;
+}
+
+.inline {
+    display: inline;
 }

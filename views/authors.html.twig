@@ -62,7 +62,14 @@
                             {% if authorBooks is not empty %}
                                 <ul>
                                     {% for book in authorBooks %}
-                                        <a href='/books/{{ book.getId }}'><li>{{ book.getName }}</li></a>
+                                        <li>
+                                            <a href='/books/{{ book.getId }}'>{{ book.getTitle }}</a>
+                                            <form class='inline' action='/authors/delete/{{ author.getId }}' method='post'>
+                                                <input type='hidden' name='_method' value='delete'>
+                                                <input type='hidden' name='book_id' value='{{ book.getId }}'>
+                                                <button class='trash' type='submit'><span class='glyphicon glyphicon-trash'></span></button>
+                                            </form>
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
