@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div class='container'>
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="/">The LB Library</a>
+                </div>
+                <div class="collapse navbar-collapse" id="nav">
+                  <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/">Home</a></li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+            <h1>Books GALORE!</h1>
+            <div class='row'>
+                <div class='col-sm-3'>
+                    <div class='well'>
+                        {% if books is not empty %}
+                        <h3>All Books</h3>
+                            <ul>
+                                {% for book in books %}
+                                    <a href='/books/{{ book.getId }}'><li>{{ book.getTitle }}</li></a>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                        {% endif %}
+                        <form action='/books' method='post'>
+                            <h3>Add an Book</h3>
+                            <div class='form-group'>
+                                <label>Title:</label>
+                                <input type='text' name='title' class='form-control'>
+                            </div>
+                            <button type='submit' class='btn btn-info'>Add</button>
+                        </form>
+                    </div>
+                </div>
+                <div class='col-sm-9'>
+                    <div class='well'>
+                        {% if book is empty %}
+                            <h3 class='text-center'>Select a book from the list</h3>
+                        {% else %}
+                            <h2>{{ book.getTitle }}</h2>
+                            <hr>
+                            <h3>Edit Book</h3>
+                            <form class='editForm' action='/books/{{ book.getId }}' method='post'>
+                                <input type='hidden' name='_method' value='patch'>
+                                <div class='form-group'>
+                                    <label>Title:</label>
+                                    <input type='text' name='title' class='form-control' value='{{ book.getTitle }}'>
+                                </div>
+                                <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-pencil'></span> Edit</button>
+                            </form>
+                            <form class='deleteButton' action='/books/{{ book.getId }}' method='post'>
+                                <input type='hidden' name='_method' value='delete'>
+                                <button class='btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Book</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

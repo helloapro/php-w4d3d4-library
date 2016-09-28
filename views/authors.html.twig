@@ -2,6 +2,34 @@
 <html>
     <body>
         <div class='container'>
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="/">The LB Library</a>
+                </div>
+                <div class="collapse navbar-collapse" id="nav">
+                  <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/">Home</a></li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
             <h1>Authors GALORE!</h1>
             <div class='row'>
                 <div class='col-sm-3'>
@@ -31,20 +59,44 @@
                             <h3 class='text-center'>Select an author from the list</h3>
                         {% else %}
                             <h2>{{ author.getName }}</h2>
+                            {% if authorBooks is not empty %}
+                                <ul>
+                                    {% for book in authorBooks %}
+                                        <a href='/books/{{ book.getId }}'><li>{{ book.getName }}</li></a>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                             <hr>
-                            <h3>Edit Author</h3>
-                            <form class='editForm' action='/authors/{{ author.getId }}' method='post'>
-                                <input type='hidden' name='_method' value='patch'>
-                                <div class='form-group'>
-                                    <label>Name:</label>
-                                    <input type='text' name='name' class='form-control' value='{{ author.getName }}'>
+                            <div class='row'>
+                                <div class='col-sm-6'>
+                                    <h3>Add a Book</h3>
+                                    <form class='editForm' action='/authors/add/{{ author.getId }}' method='post'>
+                                        <div class='form-group'>
+                                            <label>Title:</label>
+                                            <select class='form-control' name='book_id'>
+                                                {% for book in allBooks %}
+                                                    <option value='{{ book.getId }}'>{{ book.getTitle }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-book'></span> Add</button>
+                                    </form>
                                 </div>
-                                <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-pencil'></span> Edit</button>
-                            </form>
-                            <form class='deleteButton' action='/authors/{{ author.getId }}' method='post'>
-                                <input type='hidden' name='_method' value='delete'>
-                                <button class='btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Author</button>
-                            </form>
+                                <div class='col-sm-6'>
+                                <h3>Edit Author</h3>
+                                <form class='editForm' action='/authors/{{ author.getId }}' method='post'>
+                                    <input type='hidden' name='_method' value='patch'>
+                                    <div class='form-group'>
+                                        <label>Name:</label>
+                                        <input type='text' name='name' class='form-control' value='{{ author.getName }}'>
+                                    </div>
+                                    <button type='submit' class='pull-left btn btn-info'><span class='glyphicon glyphicon-pencil'></span> Edit</button>
+                                </form>
+                                <form class='deleteButton' action='/authors/{{ author.getId }}' method='post'>
+                                    <input type='hidden' name='_method' value='delete'>
+                                    <button class='pull-right btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Author</button>
+                                </form>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
