@@ -148,5 +148,56 @@
 
             $this->assertEquals([$test_author, $test_author2], $test_book->getAuthors());
         }
+
+        function test_searchBooks()
+        {
+            $title = "Prisoner of Azkaban";
+            $test_book = new Book($title);
+            $test_book->save();
+            $title2 = "Chamber of Secrets";
+            $test_book2 = new Book($title2);
+            $test_book2->save();
+            $title3 = "Prisma Colored Stone";
+            $test_book3 = new Book($title3);
+            $test_book3->save();
+            $name = "JK Rowling";
+            $test_author = new Author($name);
+            $test_author->save();
+            $test_book->addAuthor($test_author->getId());
+            $test_book2->addAuthor($test_author->getId());
+
+            $search_input = "of";
+            $result = Book::searchBooks($search_input);
+
+            $this->assertEquals([[$test_book, [$test_author]],[$test_book2, [$test_author]]], $result);
+        }
+
+        function test_searchAuthors()
+        {
+            $title = "Prisoner of Azkaban";
+            $test_book = new Book($title);
+            $test_book->save();
+            $title2 = "Chamber of Secrets";
+            $test_book2 = new Book($title2);
+            $test_book2->save();
+            $title3 = "Prisma Colored Stone";
+            $test_book3 = new Book($title3);
+            $test_book3->save();
+            $name = "JK Rowling";
+            $test_author = new Author($name);
+            $test_author->save();
+            $name2 = "Shel Silverstein";
+            $test_author2 = new Author($name2);
+            $test_author2->save();
+
+            $test_book->addAuthor($test_author->getId());
+            $test_book2->addAuthor($test_author->getId());
+            $test_book3->addAuthor($test_author2->getId());
+
+            $search_input = "rowl";
+            $result = Book::searchBooks($search_input);
+
+            $this->assertEquals([[$test_book, [$test_author]],[$test_book2, [$test_author]]], $result);
+        }
     }
 ?>
