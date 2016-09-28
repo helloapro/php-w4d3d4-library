@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Library</title>
+        <meta charset="utf-8">
+        <title></title>
     </head>
     <body>
-        <div class='container'>
+        <div class="container">
             <nav class="navbar navbar-default">
               <div class="container-fluid">
                 <div class="navbar-header">
@@ -41,10 +42,22 @@
                 </div>
               </div>
             </nav>
-
-            <h1>The LORI BETH Library</h1>
-            <a href='/books' class='btn btn-lg btn-success'>Browse all BOOKS</a>
-            <a href='/authors' class='btn btn-lg btn-success'>Browse all AUTHORS</a>
+            <h1>Search Results</h1>
+            {% for book in books %}
+                <div class='well'>
+                <a href='/books/{{ book[0].getId}}'><h4>{{ book[0].getTitle }}</h4></a>
+                    {% if book[1] is not empty %}
+                        <p>By:
+                        {% for author in book[1] %}
+                            {{ author.getName }}{% if book[1]|length == 2 and loop.index == 1 %} and
+                            {% elseif book[1]|length > 2 and loop.index < book[1]|length - 1 %},
+                            {% elseif book[1]|length > 2 and loop.index == book[1]|length - 1 %}, and
+                            {% endif %}
+                        {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
     </body>
 </html>

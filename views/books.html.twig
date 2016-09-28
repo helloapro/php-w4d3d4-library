@@ -26,6 +26,14 @@
                         <li><a href="#">Separated link</a></li>
                       </ul>
                     </li>
+                    <li>
+                        <form class="navbar-form navbar-left" action='/search_books' method='post'>
+                          <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search" name='search_input'>
+                            <button type="submit" class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>
+                          </div>
+                        </form>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -44,7 +52,7 @@
                             <hr>
                         {% endif %}
                         <form action='/books' method='post'>
-                            <h3>Add an Book</h3>
+                            <h3>Add a Book</h3>
                             <div class='form-group'>
                                 <label>Title:</label>
                                 <input type='text' name='title' class='form-control'>
@@ -59,20 +67,53 @@
                             <h3 class='text-center'>Select a book from the list</h3>
                         {% else %}
                             <h2>{{ book.getTitle }}</h2>
+                            {% if bookAuthors is not empty %}
+                                <p>By:
+                                {% for author in bookAuthors %}
+                                    {{ author.getName }}{% if bookAuthors|length == 2 and loop.index == 1 %} and
+                                    {% elseif bookAuthors|length > 2 and loop.index < bookAuthors|length - 1 %},
+                                    {% elseif bookAuthors|length > 2 and loop.index == bookAuthors|length - 1 %}, and
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+
+                            {% endif %}
                             <hr>
-                            <h3>Edit Book</h3>
-                            <form class='editForm' action='/books/{{ book.getId }}' method='post'>
-                                <input type='hidden' name='_method' value='patch'>
-                                <div class='form-group'>
-                                    <label>Title:</label>
-                                    <input type='text' name='title' class='form-control' value='{{ book.getTitle }}'>
+                            <div class='row'>
+                                <div class='col-sm-6'>
+                                    <h3>Add an Author</h3>
+                                    <form class='editForm' action='/books/add/{{ book.getId }}' method='post'>
+                                        <div class='form-group'>
+                                            <label>Name:</label>
+                                            <select class='form-control' name='author_id'>
+                                                {% for author in allAuthors %}
+                                                    <option value='{{ author.getId }}'>{{ author.getName }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-user'></span> Add</button>
+                                    </form>
+
                                 </div>
-                                <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-pencil'></span> Edit</button>
-                            </form>
-                            <form class='deleteButton' action='/books/{{ book.getId }}' method='post'>
-                                <input type='hidden' name='_method' value='delete'>
-                                <button class='btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Book</button>
-                            </form>
+                                <div class='col-sm-6'>
+                                    <h3>Edit Book</h3>
+                                    <form class='editForm' action='/books/{{ book.getId }}' method='post'>
+                                        <input type='hidden' name='_method' value='patch'>
+                                        <div class='form-group'>
+                                            <label>Title:</label>
+                                            <input type='text' name='title' class='form-control' value='{{ book.getTitle }}'>
+                                        </div>
+                                        <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-pencil'></span> Edit</button>
+                                    </form>
+                                    <form class='deleteButton' action='/books/{{ book.getId }}' method='post'>
+                                        <input type='hidden' name='_method' value='delete'>
+                                        <button class='btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Book</button>
+                                    </form>
+                                </div>
+
+                            </div>
+
+
                         {% endif %}
                     </div>
                 </div>
