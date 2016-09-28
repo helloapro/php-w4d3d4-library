@@ -70,6 +70,26 @@
             $this->setTitle($title);
         }
 
+        function addCopies($number)
+        {
+            for ($i=0; $i < $number; $i++) {
+                $new_copy = new Copy($this->getId());
+                $new_copy->save();
+            }
+        }
+
+        function countCopies()
+        {
+            $allCopies = Copy::getAll();
+            $count = 0;
+            foreach ($allCopies as $copy) {
+                if ($copy->getBookId() == $this->getId()) {
+                    $count++;
+                }
+            }
+            return $count;
+        }
+
         function addAuthor($author_id)
         {
             $GLOBALS['DB']->exec("INSERT INTO authors_books (book_id, author_id) VALUES ({$this->getId()}, {$author_id});");

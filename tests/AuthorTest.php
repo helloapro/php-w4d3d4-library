@@ -111,8 +111,7 @@
             $new_name = "Jo Kat Rowling";
 
             $test_author->update($new_name);
-            $found_author = Author::find($test_author->getId());
-            $result = $found_author->getName();
+            $result = $test_author->getName();
 
             $this->assertEquals($new_name, $result);
         }

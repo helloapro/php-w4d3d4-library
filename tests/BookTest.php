@@ -111,8 +111,7 @@
             $new_title = "Order of the Phoenix";
 
             $test_book->update($new_title);
-            $found_book = Book::find($test_book->getId());
-            $result = $found_book->getTitle();
+            $result = $test_book->getTitle();
 
             $this->assertEquals($new_title, $result);
         }

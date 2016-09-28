@@ -4,6 +4,7 @@
     require_once __DIR__."/../vendor/autoload.php";
     require_once __DIR__."/../src/Author.php";
     require_once __DIR__."/../src/Book.php";
+    require_once __DIR__."/../src/Copy.php";
 
     use Symfony\Component\Debug\Debug;
     Debug::enable();
@@ -66,36 +67,37 @@
     });
 
     $app->get("/books", function() use ($app) {
-        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => null, 'bookAuthors' => null, 'allAuthors' => Author::getAll()));
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => null, 'bookAuthors' => null, 'allAuthors' => Author::getAll(), 'copies' => null));
     });
 
     $app->post("/books", function() use ($app) {
         $new_book = new Book($_POST['title']);
         $new_book->save();
-        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $new_book, 'bookAuthors' => null, 'allAuthors' => Author::getAll()));
+        $new_book->addCopies($_POST['copies']);
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $new_book, 'bookAuthors' => null, 'allAuthors' => Author::getAll(), 'copies' => $new_book->countCopies()));
     });
 
     $app->get("/books/{id}", function($id) use ($app) {
         $found_book = Book::find($id);
-        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll()));
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll(), 'copies' => $found_book->countCopies()));
     });
 
     $app->patch("/books/{id}", function($id) use ($app) {
         $found_book = Book::find($id);
         $found_book->update($_POST['title']);
-        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll()));
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll(), 'copies' => $found_book->countCopies()));
     });
 
     $app->delete("/books/{id}", function($id) use ($app) {
         $found_book = Book::find($id);
         $found_book->delete();
-        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => null, 'bookAuthors' => null, 'allAuthors' => Author::getAll()));
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => null, 'bookAuthors' => null, 'allAuthors' => Author::getAll(), 'copies' => null));
     });
 
     $app->post("/books/add/{id}", function($id) use ($app) {
         $found_book = Book::find($id);
         $found_book->addAuthor($_POST['author_id']);
-        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll()));
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll(), 'copies' => $found_book->countCopies()));
     });
 
     $app->post('/search_books', function() use ($app) {

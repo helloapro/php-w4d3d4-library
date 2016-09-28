@@ -1,3 +1,8 @@
+body {
+    background: url('/img/lori.jpg');
+    background-size: 33.3333%;
+}
+
 button.trash {
     border: none;
     background: transparent;
