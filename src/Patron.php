@@ -35,6 +35,9 @@
             if(in_array($this->getUsername(), $usernames) == false) {
                 $GLOBALS['DB']->exec("INSERT INTO patrons (username) VALUES ('{$this->getUsername()}');");
                 $this->id = $GLOBALS['DB']->lastInsertId();
+                return true;
+            } else {
+                return false;
             }
         }
 
@@ -43,12 +46,26 @@
             $GLOBALS['DB']->exec("DELETE FROM patrons WHERE id={$this->getid()};");
         }
 
-        static function find($search_id)
+        static function findById($search_id)
         {
             $returned_patrons = Patron::getAll();
+            $found_patron = null;
             foreach($returned_patrons as $patron){
                 $patron_id = $patron->getId();
                 if($patron_id == $search_id){
+                    $found_patron = $patron;
+                }
+            }
+            return $found_patron;
+        }
+
+        static function findByUsername($username)
+        {
+            $returned_patrons = Patron::getAll();
+            $found_patron = null;
+            foreach($returned_patrons as $patron){
+                $patron_name = $patron->getUsername();
+                if($patron_name == $username){
                     $found_patron = $patron;
                 }
             }

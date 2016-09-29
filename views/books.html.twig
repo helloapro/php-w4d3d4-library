@@ -11,21 +11,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>
-                  <a class="navbar-brand" href="/">The LB Library</a>
+                  <a class="navbar-brand">The LB Library</a>
                 </div>
                 <div class="collapse navbar-collapse" id="nav">
                   <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/">Home</a></li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                      <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                      </ul>
-                    </li>
                     <li>
                         <form class="navbar-form navbar-left" action='/search_books' method='post'>
                           <div class="form-group">
@@ -33,6 +22,13 @@
                             <button type="submit" class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>
                           </div>
                         </form>
+                    </li>
+                    <li>
+                        {% if user != null %}
+                            <a href="/patron">My Account</a>
+                        {% else %}
+                            <a href="/">Home</a>
+                        {% endif %}
                     </li>
                   </ul>
                 </div>
@@ -70,6 +66,11 @@
                         {% if book is empty %}
                             <h3 class='text-center'>Select a book from the list</h3>
                         {% else %}
+                            {% if user != null and copies > 0 %}
+                                <a class='pull-right' href="/patron/{{ book.getId }}">Check out a copy!</a>
+                            {% elseif user != null and copies == 0 %}
+                                <p class='pull-right'>(No copies available)</p>
+                            {% endif %}
                             <h2>{{ book.getTitle }}</h2>
                             {% if bookAuthors is not empty %}
                                 <p>By:

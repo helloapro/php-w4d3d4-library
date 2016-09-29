@@ -79,7 +79,7 @@
             $this->assertEquals([$test_patron, $test_patron2], $result);
         }
 
-        function test_find()
+        function test_findById()
         {
             $username = "mlawson3691";
             $test_patron = new Patron($username);
@@ -89,7 +89,22 @@
             $test_patron2->save();
 
             $search_id = $test_patron->getId();
-            $result = Patron::find($search_id);
+            $result = Patron::findById($search_id);
+
+            $this->assertEquals($test_patron, $result);
+        }
+
+        function test_findByUsername()
+        {
+            $username = "mlawson3691";
+            $test_patron = new Patron($username);
+            $test_patron->save();
+            $username2 = "helloapro";
+            $test_patron2 = new Patron($username2);
+            $test_patron2->save();
+
+            $search_name = $test_patron->getUsername();
+            $result = Patron::findByUsername($search_name);
 
             $this->assertEquals($test_patron, $result);
         }
