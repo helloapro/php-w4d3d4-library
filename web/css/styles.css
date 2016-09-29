@@ -8,8 +8,19 @@ button.trash {
     background: transparent;
 }
 
+h1 {
+    margin-bottom: 20px;
+}
+
+mark {
+    background-color: #b3c6ff;
+    border-radius: 3px;
+}
+
 .well {
     overflow:hidden;
+    background: white;
+    opacity: 0.95;
 }
 
 .deleteButton {

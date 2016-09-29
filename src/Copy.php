@@ -1,7 +1,7 @@
 <?php
     class Copy
     {
-        private $status;
+        private $status; // available or patron_id
         private $book_id;
         private $id;
 

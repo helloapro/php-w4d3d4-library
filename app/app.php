@@ -82,6 +82,12 @@
         return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll(), 'copies' => $found_book->countCopies()));
     });
 
+    $app->post("/books/{id}", function($id) use ($app) {
+        $found_book = Book::find($id);
+        $found_book->addCopies($_POST['copies']);
+        return $app['twig']->render('books.html.twig', array('books' => Book::getAll(), 'book' => $found_book, 'bookAuthors' => $found_book->getAuthors(), 'allAuthors' => Author::getAll(), 'copies' => $found_book->countCopies()));
+    });
+
     $app->patch("/books/{id}", function($id) use ($app) {
         $found_book = Book::find($id);
         $found_book->update($_POST['title']);

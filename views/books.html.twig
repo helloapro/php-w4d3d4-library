@@ -38,7 +38,7 @@
                 </div>
               </div>
             </nav>
-            <h1>Books GALORE!</h1>
+            <h1><mark>Books GALORE!</mark></h1>
             <div class='row'>
                 <div class='col-sm-3'>
                     <div class='well'>
@@ -61,7 +61,7 @@
                                 <label>Number of copies:</label>
                                 <input type='text' name='copies' class='form-control'>
                             </div>
-                            <button type='submit' class='btn btn-info'>Add</button>
+                            <button type='submit' class='btn btn-info'><span class='glyphicon glyphicon-book'></span> Add</button>
                         </form>
                     </div>
                 </div>
@@ -83,10 +83,20 @@
 
                             {% endif %}
                             <h5>Number of copies available: {{ copies }} </h5>
-                            
+
                             <hr>
                             <div class='row'>
-                                <div class='col-sm-6'>
+                                <div class='col-sm-4'>
+                                    <h3>Add Copies</h3>
+                                    <form action="/books/{{ book.getId }}" method="post">
+                                        <div class='form-group'>
+                                            <label>Number of additional copies:</label>
+                                            <input type='text' name='copies' class='form-control'>
+                                        </div>
+                                        <button class='btn btn-info' type='submit'><span class='glyphicon glyphicon-duplicate'></span> Add</button>
+                                    </form>
+                                </div>
+                                <div class='col-sm-4'>
                                     <h3>Add an Author</h3>
                                     <form class='editForm' action='/books/add/{{ book.getId }}' method='post'>
                                         <div class='form-group'>
@@ -101,7 +111,7 @@
                                     </form>
 
                                 </div>
-                                <div class='col-sm-6'>
+                                <div class='col-sm-4'>
                                     <h3>Edit Book</h3>
                                     <form class='editForm' action='/books/{{ book.getId }}' method='post'>
                                         <input type='hidden' name='_method' value='patch'>
@@ -113,7 +123,7 @@
                                     </form>
                                     <form class='deleteButton' action='/books/{{ book.getId }}' method='post'>
                                         <input type='hidden' name='_method' value='delete'>
-                                        <button class='btn btn-danger' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Book</button>
+                                        <button class='btn btn-danger pull-right' type='submit'><span class='glyphicon glyphicon-trash'></span> Delete Book</button>
                                     </form>
                                 </div>
 
