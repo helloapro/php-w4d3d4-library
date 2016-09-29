@@ -37,6 +37,7 @@
         static function find($search_id)
         {
             $returned_books = Book::getAll();
+            $found_book = null;
             foreach($returned_books as $book){
                 $book_id = $book->getId();
                 if($book_id == $search_id){

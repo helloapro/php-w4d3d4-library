@@ -31,6 +31,10 @@
     $app->register(new Silex\Provider\TwigServiceProvider(), array('twig.path' => __DIR__.'/../views'));
 
     $app->get("/", function() use ($app) {
+        // if (date('M d, Y', strtotime("-2 day")) < date("M d, Y")) {
+        //     $days_overdue = date_diff(new DateTime(date("M d, Y")), new DateTime(date('M d, Y', strtotime("-2 day"))))->days;
+        //     echo $days_overdue . ' days overdue';
+        // }
         return $app['twig']->render('index.html.twig', array('valid' => false, 'user' => $_SESSION['current_user']));
     });
 
@@ -120,7 +124,10 @@
     });
 
     $app->get('/patron', function() use ($app) {
-        return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user']));
+        $myCopies = $_SESSION['current_user']->getCopies();
+        $currentCopies = $myCopies[0];
+        $pastCopies = $myCopies[1];
+        return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user'], 'currentCopies' => $currentCopies, 'pastCopies' => $pastCopies));
     });
 
     $app->post('/patron', function() use ($app) {
@@ -128,7 +135,7 @@
         $valid = $new_patron->save();
         if ($valid) {
             $_SESSION['current_user'] = $new_patron;
-            return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user']));
+            return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user'], 'currentCopies' => null, 'pastCopies' => null));
         } else {
             return $app['twig']->render('index.html.twig', array('valid' => 'taken username'));
         }
@@ -138,7 +145,10 @@
         $found_patron = Patron::findByUsername($_POST['username']);
         if ($found_patron !== null) {
             $_SESSION['current_user'] = $found_patron;
-            return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user']));
+            $myCopies = $_SESSION['current_user']->getCopies();
+            $currentCopies = $myCopies[0];
+            $pastCopies = $myCopies[1];
+            return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user'], 'currentCopies' => $currentCopies, 'pastCopies' => $pastCopies));
         } else {
             return $app['twig']->render('index.html.twig', array('valid' => 'wrong username'));
         }
@@ -151,14 +161,28 @@
         }
         $reserved_copy = $bookCopies[0];
         $_SESSION['current_user']->addCopy($reserved_copy->getId());
-        $reserved_copy->setStatus($_SESSION['current_user']->getId());
-        return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user']));
+        $reserved_copy->update($_SESSION['current_user']->getId(), date('M d, Y', strtotime("+14 day")));
+        $myCopies = $_SESSION['current_user']->getCopies();
+        $currentCopies = $myCopies[0];
+        $pastCopies = $myCopies[1];
+        return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user'], 'currentCopies' => $currentCopies, 'pastCopies' => $pastCopies));
+    });
+
+    $app->patch('/patron/{copy_id}', function($copy_id) use ($app) {
+        $return_copy = Copy::find($copy_id);
+        $return_copy->update("available", "");
+        $myCopies = $_SESSION['current_user']->getCopies();
+        $currentCopies = $myCopies[0];
+        $pastCopies = $myCopies[1];
+        return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user'], 'currentCopies' => $currentCopies, 'pastCopies' => $pastCopies));
     });
 
     $app->get("/log_out", function() use ($app) {
         $_SESSION['current_user'] = null;
         return $app['twig']->render('index.html.twig', array('valid' => false, 'user' => $_SESSION['current_user']));
     });
+
+
 
 
     // $app->delete("/authors/delete/{id}", function($id) use ($app) {

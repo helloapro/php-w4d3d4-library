@@ -15,6 +15,7 @@ h1 {
 mark {
     background-color: #b3c6ff;
     border-radius: 3px;
+    opacity: 0.9;
 }
 
 .well {
@@ -29,4 +30,19 @@ mark {
 
 .inline {
     display: inline;
+}
+
+.late {
+    border-color: #800000;
+    background: #ffcccc;
+}
+
+.due {
+    border-color: #ffcc00;
+    background: #fff5cc;
+}
+
+.good {
+    border-color: #005780;
+    background: #e6f7ff;
 }

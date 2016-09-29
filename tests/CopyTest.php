@@ -111,8 +111,9 @@
             $test_copy = new Copy($book_id);
             $test_copy->save();
             $new_status = "reserved";
+            $new_due_date = "Jan 12, 2020";
 
-            $test_copy->update($new_status);
+            $test_copy->update($new_status, $new_due_date);
             $result = $test_copy->getStatus();
 
             $this->assertEquals($new_status, $result);

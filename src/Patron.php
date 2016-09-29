@@ -107,46 +107,38 @@
                 JOIN checkouts ON(checkouts.patron_id = patrons.id)
                 JOIN copies ON(copies.id = checkouts.copy_id)
                 WHERE patrons.id = {$this->getId()};");
-            $copies = array();
+            $current = array();
+            $currentCopies = array();
+            $pastCopies = array();
             foreach ($returned_copies as $copy) {
                 $status = $copy['status'];
                 $book_id = $copy['book_id'];
+                $due_date = $copy['due_date'];
                 $id = $copy['id'];
-                $found_copy = new Copy($status, $book_id, $id);
-                array_push($copies, $found_copy);
+                $found_copy = new Copy($book_id, $due_date, $status, $id);
+                $found_book = Book::find($book_id);
+
+                if ($status == $this->getId()) {
+                    array_push($current, $id);
+                } else {
+                    array_push($pastCopies, [$found_copy, $found_book]);
+                }
             }
-            return $copies;
+            $currentCounts = array_count_values($current);
+            foreach ($currentCounts as $key => $value) {
+                $copy = Copy::find($key);
+                $book = Book::find($copy->getBookId());
+                if ($value == 1) {
+                    array_push($currentCopies, [$copy, $book]);
+                } else {
+                    array_push($currentCopies, [$copy, $book]);
+                    for ($i=0; $i < $value-1; $i++) {
+                        array_push($pastCopies, [$copy, $book]);
+                    }
+                }
+            }
+
+            return [$currentCopies, $pastCopies];
         }
-
-        // function returnCopy($copy_id)
-        // {
-        //     // $GLOBALS['DB']->exec("DELETE FROM checkouts WHERE author_id = {$author_id} AND patron_id = {$this->getId()};");
-        // }
-
-        // static function searchPatrons($search_input)
-        // {
-        //     $allPatronsArray = Patron::getAll();
-        //     $searchResults = array();
-        //     foreach ($allPatronsArray as $patron)
-        //     {
-        //         if (stripos($patron->getTitle(), $search_input) !== false) {
-        //             $authors = $patron->getAuthors();
-        //             array_push($searchResults, [$patron, $authors]);
-        //         }
-        //     }
-        //
-        //     $allAuthors = Author::getAll();
-        //     foreach ($allAuthors as $author)
-        //     {
-        //         if (stripos($author->getName(), $search_input) !== false) {
-        //             $patrons = $author->getPatrons();
-        //             foreach ($patrons as $patron) {
-        //                 $authors = $patron->getAuthors();
-        //                 array_push($searchResults, [$patron, $authors]);
-        //             }
-        //         }
-        //     }
-        //     return $searchResults;
-        // }
     }
 ?>

@@ -43,20 +43,37 @@
                 <div class='col-sm-6'>
                     <div class='well'>
                         <h3>Your current checkouts:</h3>
-                        <ul>
-
-
-                        </ul>
+                        {% if currentCopies is not empty %}
+                            {% for array in currentCopies %}
+                                {% if date(array[0].getDueDate) < date("now"|date("M d, Y")) %}
+                                    <div class='well late'>
+                                {% elseif date(array[0].getDueDate) == date("now"|date("M d, Y")) %}
+                                    <div class='well due'>
+                                {% else %}
+                                    <div class='well good'>
+                                {% endif %}
+                                    <h4>{{ array[1].getTitle }}</h4>
+                                    <p>Due Date: {{ array[0].getDueDate }}</p>
+                                    <form class="" action='/patron/{{ array[0].getId }}' method="post">
+                                        <input type="hidden" name="_method" value="patch">
+                                        <button type="submit" class='btn btn-default'>Return this Book!</button>
+                                    </form>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
                     </div>
                 </div>
                 <div class='col-sm-3'>
                     <div class='well'>
                         <h3>Your checkout history:</h3>
-                        <ul>
-
-                        </ul>
-
+                        {% if pastCopies is not empty %}
+                            {% for array in pastCopies %}
+                                <div class='well'>
+                                    <h4>{{ array[1].getTitle }}</h4>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -2,14 +2,26 @@
     class Copy
     {
         private $status; // available or patron_id
+        private $due_date;
         private $book_id;
         private $id;
 
-        function __construct($book_id, $status = "available", $id = null)
+        function __construct($book_id, $due_date = '', $status = "available", $id = null)
         {
             $this->book_id = $book_id;
+            $this->due_date = $due_date;
             $this->status = $status;
             $this->id = $id;
+        }
+
+        function getDueDate()
+        {
+            return $this->due_date;
+        }
+
+        function setDueDate($new_due_date)
+        {
+            $this->due_date = $new_due_date;
         }
 
         function getStatus()
@@ -34,7 +46,7 @@
 
         function save()
         {
-            $GLOBALS['DB']->exec("INSERT INTO copies (status, book_id) VALUES ('{$this->getStatus()}', {$this->getBookId()});");
+            $GLOBALS['DB']->exec("INSERT INTO copies (status, book_id, due_date) VALUES ('{$this->getStatus()}', {$this->getBookId()}, '{$this->getDueDate()}');");
             $this->id = $GLOBALS['DB']->lastInsertId();
         }
 
@@ -63,7 +75,8 @@
                 $id = $copy['id'];
                 $status = $copy['status'];
                 $book_id = $copy['book_id'];
-                $new_copy = new Copy($book_id, $status, $id);
+                $due_date = $copy['due_date'];
+                $new_copy = new Copy($book_id, $due_date, $status, $id);
                 array_push($copies, $new_copy);
             }
             return $copies;
@@ -74,10 +87,11 @@
             $GLOBALS['DB']->exec("DELETE FROM copies;");
         }
 
-        function update($status)
+        function update($status, $due_date)
         {
-            $GLOBALS['DB']->exec("UPDATE copies SET status ='{$status}' WHERE id ='{$this->getId()}';");
+            $GLOBALS['DB']->exec("UPDATE copies SET status ='{$status}', due_date = '{$due_date}' WHERE id ='{$this->getId()}';");
             $this->setStatus($status);
+            $this->setDueDate($due_date);
         }
     }
 ?>
