@@ -83,11 +83,23 @@
             $allCopies = Copy::getAll();
             $count = 0;
             foreach ($allCopies as $copy) {
-                if ($copy->getBookId() == $this->getId()) {
+                if ($copy->getBookId() == $this->getId() && $copy->getStatus() == "available") {
                     $count++;
                 }
             }
             return $count;
+        }
+
+        function getCopies()
+        {
+            $allCopies = Copy::getAll();
+            $bookCopies = array();
+            foreach ($allCopies as $copy) {
+                if ($copy->getBookId() == $this->getId() && $copy->getStatus() == "available") {
+                    array_push($bookCopies, $copy);
+                }
+            }
+            return $bookCopies;
         }
 
         function addAuthor($author_id)

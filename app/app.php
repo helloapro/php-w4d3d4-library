@@ -144,6 +144,17 @@
         }
     });
 
+    $app->post('/patron/{book_id}', function($book_id) use ($app) {
+        $found_book = Book::find($book_id);
+        if ($found_book->countCopies() > 0) {
+            $bookCopies = $found_book->getCopies();
+        }
+        $reserved_copy = $bookCopies[0];
+        $_SESSION['current_user']->addCopy($reserved_copy->getId());
+        $reserved_copy->setStatus($_SESSION['current_user']->getId());
+        return $app['twig']->render('patron.html.twig', array('user' => $_SESSION['current_user']));
+    });
+
     $app->get("/log_out", function() use ($app) {
         $_SESSION['current_user'] = null;
         return $app['twig']->render('index.html.twig', array('valid' => false, 'user' => $_SESSION['current_user']));

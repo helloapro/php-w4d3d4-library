@@ -67,7 +67,9 @@
                             <h3 class='text-center'>Select a book from the list</h3>
                         {% else %}
                             {% if user != null and copies > 0 %}
-                                <a class='pull-right' href="/patron/{{ book.getId }}">Check out a copy!</a>
+                                <form action="/patron/{{ book.getId }}" method="post">
+                                    <button type='submit' class='pull-right btn btn-info'>Check out a copy!</button>
+                                </form>
                             {% elseif user != null and copies == 0 %}
                                 <p class='pull-right'>(No copies available)</p>
                             {% endif %}
